@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import {initializeApp} from 'firebase/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
+import './views'
 import './assets/main.css'
 
 

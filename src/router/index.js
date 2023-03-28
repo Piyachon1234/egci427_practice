@@ -1,39 +1,23 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import CityList from '@/components/CityList'
+import Info from '@/components/Info'
+import SignIn from '@/components/SignIn'
+import SignUp from '@/components/SignUp'
 
-import { createRouter, createWebHistory } from 'vue-router'
-import CityList from '../views/CityList.vue'
-import Info from '../views/Info.vue'
-import SignIn from '../views/SignIn.vue'
-import SignUp from '../views/SignUp.vue'
+Vue.use(Router)
 
-import {getAuth, onAuthStateChanged} from 'firebase/auth'
-
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+let router = new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/cities'
-    },
-
-    {
-      path: '/:catchAll(.*)',
-      redirect: '/signin'
-    },
     {
       path: '/cities',
       name: 'CityList',
-      component: CityList,
-      meta: {
-        requireAuth: true
-      }
+      component: CityList
     },
     {
       path: '/info/:city',
       name: 'Info',
-      component: Info,
-      meta: {
-        requireAuth: true
-      }
+      component: Info
     },
     {
       path: '/signin',
@@ -42,40 +26,10 @@ const router = createRouter({
     },
     {
       path: '/signup',
-      name: 'SignUp',
+      name: 'Signp',
       component: SignUp
     }
   ]
-})
-
-
-const getCurrentUser = () => {
-  return new Promise ((resolve, reject)=>{
-    const removeListener = onAuthStateChanged(
-      getAuth(),
-      (user) =>{
-        removeListener()
-        resolve(user)
-      },
-      reject
-    )
-  })
-}
-
-
-router.beforeEach(async(to, from, next)=> {
-  const requireAuth = to.matched.some((record)=>record.meta.requireAuth)
-  if(requireAuth) {
-    if(await getCurrentUser()){
-      console.log('authorized user to access the page')
-        next()
-    } else {
-      console.log('Unauthorized user to access the page')
-      next('signin')
-    }
-  } else {
-    next()
-  }
 })
 
 export default router
